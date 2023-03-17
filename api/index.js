@@ -1,4 +1,5 @@
 const express = require("express");
+const bodyParser = require('body-parser');
 const twilio = require("twilio");
 const app = express();
 
@@ -8,7 +9,14 @@ const toNumbers = process.env.TWILIO_TO_NUMBERS.split(",");
 const fromNumber = process.env.TWILIO_FROM_NUMBER;
 const client = twilio(accountSid, authToken);
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.post("/api/reply", async (req, res) => {
+  // filter out unrecognized "From" phone numbers
+  if (!toNumbers.includes(req.body.From)) {
+    res.status(403).send();
+  }
   try {
     // send sms to each phone number
     for (const number of toNumbers) {
