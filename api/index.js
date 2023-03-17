@@ -4,18 +4,21 @@ const app = express();
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
-const toNumber = process.env.TWILIO_TO_NUMBER;
+const toNumbers = process.env.TWILIO_TO_NUMBERS.split(",");
 const fromNumber = process.env.TWILIO_FROM_NUMBER;
 const client = twilio(accountSid, authToken);
 
 app.post("/api/reply", async (req, res) => {
   try {
-    const message = await client.messages.create({
-      body: "A caregiver is attending to it",
-      from: fromNumber,
-      to: toNumber,
-    });
-    console.log("Message sent:", message.sid);
+    // send sms to each phone number
+    for (const number of toNumbers) {
+      const message = await client.messages.create({
+        body: "A caregiver is attending to it",
+        from: fromNumber,
+        to: number,
+      });
+      console.log("Message sent:", message.sid);
+    }
     res.send();
   } catch (error) {
     console.log(error);
