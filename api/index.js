@@ -30,6 +30,7 @@ app.post("/api/reply", async (req, res) => {
     res.send();
   } catch (error) {
     console.log(error);
+    res.status(500).send();
   }
 });
 
