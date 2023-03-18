@@ -1,7 +1,6 @@
 {
   "rewrites": [{ "source": "/api/(.*)", "destination": "/api" }],
   "github": {
-    "silent": true,
-    "autoAlias": false
+    "silent": true
   }
 }
